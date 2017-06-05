@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://cxf.apache.org/configuration/beans http://cxf.apache.org/schemas/configuration/cxf-beans.xsd
+		http://cxf.apache.org/configuration/security http://cxf.apache.org/schemas/configuration/security.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd"> 
+
+
+	
+	<context:component-scan base-package="com.prj.Culture" />
+	<annotation-driven />
+	
+	<security:global-method-security secured-annotations="enabled" />
+
+	 
+	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
+	<beans:bean class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping" />
+	<resources mapping="/resources/**" location="/resources/" />
+	<resources mapping="/bootstrap_css/**" location="/bootstrap/css/" />
+	<resources mapping="/bootstrap_vendor/**" location="/bootstrap/vendor/" />
+	<resources mapping="/images/**" location="/static/images/" />
+	<resources mapping="/css/**" location="/static/css/" />
+	<resources mapping="/js/**" location="/static/js/" />
+	
+	
+	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<beans:property name="prefix" value="/WEB-INF/views/" />
+		<beans:property name="suffix" value=".jsp" />
+	</beans:bean>
+
+	<beans:bean class="org.springframework.web.servlet.view.BeanNameViewResolver"/>
+	
+	<beans:bean id="downloadView"  class="com.prj.Culture.board.util.DownloadView"/>
+	
+	<!-- 100000000 1G -->
+	 <beans:bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <beans:property name="maxUploadSize" value="1000000000" />  
+        <beans:property name="maxInMemorySize" value="1000000000" />
+   </beans:bean>
+	
+	
+
+	<!--  특정 url만 캐시사용안함 (만료 시킴) -->
+<!-- 	<interceptors>
+	     <interceptor>
+	          <mapping path="/**"/>
+	          <beans:bean class="org.springframework.web.servlet.mvc.WebContentInterceptor">
+	               <beans:property name="cacheSeconds" value="0"/>
+	          </beans:bean>
+	     </interceptor>
+	</interceptors> -->
+	
+</beans:beans>
