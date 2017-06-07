@@ -19,6 +19,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.prj.Culture.security.dto.UserDTO;
 import com.prj.Culture.security.service.UserService;
@@ -29,14 +30,19 @@ public class CustomAuthenticationProvider implements AuthenticationProvider  {
 	private static final Logger logger = LoggerFactory.getLogger(CustomAuthenticationProvider.class);
 	
 	
-	@Autowired 
+	@Autowired(required=false)
 	UserService userService; 
 	
-	@Autowired 
-	private PasswordEncoder passwordEncoder; 
+	/*@Autowired(required=false) 
+	private PasswordEncoder passwordEncoder; */
 	
-	@Autowired 
+	@Autowired (required=false)
 	private SaltSource saltSource;
+	
+	@Autowired
+	BCryptPasswordEncoder passwordEncoder;
+
+
 
 	
     
@@ -55,7 +61,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider  {
 		// TODO Auto-generated method stub
 		
 		String userId = (String)authentication.getPrincipal(); // (String)authentication.getName();
-		String password = (String)authentication.getCredentials();
+		String rawPassword = (String)authentication.getCredentials();
 		
 		UserDTO user; 
 		Collection<? extends GrantedAuthority> authorities;
@@ -65,10 +71,15 @@ public class CustomAuthenticationProvider implements AuthenticationProvider  {
 		  try 
 		  { 
 		        user = userService.loadUserByUsername(userId); 
-		        String hashedPassword = passwordEncoder.encodePassword(password, saltSource.getSalt(user)); 
-		        logger.info("username : " + userId + " / password : " + password + " / hash password : " + hashedPassword); 
-		        logger.info("username : " + user.getUsername() + " / password : " + user.getPassword()); 
-		        if (!hashedPassword.equals(user.getPassword())) throw new BadCredentialsException("비밀번호가 일치하지 않습니다."); 
+//		        String hashedPassword = passwordEncoder.encodePassword(password, saltSource.getSalt(user)); 
+//		        logger.info("username : " + userId + " / password : " + password + " / hash password : " + hashedPassword); 
+//		        logger.info("username : " + user.getUsername() + " / password : " + user.getPassword()); 
+		        System.out.println(":::::"+"username : " + userId + " / password : " + rawPassword + " / hash password : " + user.getPassword());
+//		        if (!hashedPassword.equals(user.getPassword())) throw new BadCredentialsException("비밀번호가 일치하지 않습니다.");
+		        String encodedPassword=(String)user.getPassword();
+		     if ( !passwordEncoder.matches(rawPassword,encodedPassword) ) { throw new BadCredentialsException( "암호가 일치하지 않습니다." ); }
+
+		        
 		        authorities = user.getAuthorities(); 
 		  } 
 		  catch(UsernameNotFoundException e) 
@@ -85,7 +96,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider  {
 		  { 
 		        logger.info(e.toString()); throw new RuntimeException(e.getMessage()); 
 		  } 
-		        return new UsernamePasswordAuthenticationToken(user, password, authorities); 
+		        return new UsernamePasswordAuthenticationToken(user, rawPassword, authorities); 
 		
 	}
 }

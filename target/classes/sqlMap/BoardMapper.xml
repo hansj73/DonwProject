@@ -23,7 +23,8 @@
             pwd,
             hit,
             regdate,
-            filename
+            filename,
+            realname
         FROM (
             SELECT
                 a.*,
@@ -85,7 +86,8 @@
             pwd,
             hit,
             regdate,
-            filename)
+            filename,
+            realname)
         VALUES (
             boardtest_seq.nextval,
             #{writer},
@@ -94,7 +96,8 @@
             #{pwd},
             0,
             sysdate,
-            #{filename,jdbcType=VARCHAR}
+            #{filename,jdbcType=VARCHAR},
+            #{realname,jdbcType=VARCHAR}
         )
     </insert>
     
@@ -107,7 +110,8 @@
             pwd,
             hit,
             regdate,
-            filename
+            filename,
+            realname
         FROM boardtest
         WHERE seq = #{seq}
     </select>

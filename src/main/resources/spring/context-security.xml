@@ -19,7 +19,8 @@
       <intercept-url pattern="/mypage" access="hasRole('ROLE_USER')"/>
 	  <intercept-url pattern="/mypage*" access="hasRole('ROLE_USER')"/>
 	  <intercept-url pattern="/board/**" access="permitAll"/>
-<!-- 	  <intercept-url pattern="/board/**" access="hasAnyRole('ROLE_USER','ROLE_ADMIN')"/> -->
+	  <!-- <intercept-url pattern="/board/**" access="hasAnyRole('ROLE_USER','ROLE_ADMIN','ROLE_SUPERADMIN')"/> -->
+	  <intercept-url pattern="/member/**" access="hasAnyRole('ROLE_SUPERADMIN')"/>
 	   <intercept-url pattern="/" access="permitAll"/>
        <intercept-url pattern="/**" access="permitAll"/>
 	 
@@ -55,16 +56,23 @@
 	 	<beans:property name="userPropertyToUse" value="username" /> 
 	 </beans:bean>
 
+	
+	 <beans:bean id="bcryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />  
+
+
+
 	<authentication-manager>
 	      <authentication-provider ref="customAuthenticationProvider"/>
-	      <!-- <authentication-provider user-service-ref="userService"> 
-	        <password-encoder ref="encoder"> 
+	     <!--  <authentication-provider user-service-ref="userService"> 
+	        <password-encoder ref="bcryptEncoder" /> -->
+	      <!-- <authentication-provider user-service-ref="customAuthenticationProvider"> --> 
+	       <!--  <password-encoder ref="encoder"> 
 	          <salt-source ref="saltSource" /> 
-	        </password-encoder> 
-	      </authentication-provider> -->
+	        </password-encoder>  -->
+	      <!-- </authentication-provider> -->
 	</authentication-manager>
 	
 	<beans:bean id="customAuthenticationProvider" class="com.prj.Culture.security.model.CustomAuthenticationProvider"/>  
-
+    <!-- <beans:bean id="passwordEncoderMake" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/> -->
   
 </beans:beans>

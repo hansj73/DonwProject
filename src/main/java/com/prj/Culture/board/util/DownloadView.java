@@ -19,17 +19,21 @@ import org.springframework.web.servlet.view.AbstractView;
 	
 public class DownloadView  extends AbstractView{
 
+	
     public DownloadView() {
         setContentType("applicaiton/download;charset=utf-8");
     }
 
-    @Override
+	@Override
 
 	protected void renderMergedOutputModel(Map<String, Object> model,HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 		    File file = (File) model.get("downloadFile");
+		    
+		    String realname=(String)model.get("realname");
+		    
+//		    System.out.println(":::::realname:::"+realname);
 
-         	System.out.println("asdfasdf");
 
 	        response.setContentType(getContentType());
 
@@ -38,10 +42,12 @@ public class DownloadView  extends AbstractView{
 	         
 
 	        String fileName = java.net.URLEncoder.encode(file.getName(), "UTF-8");
+	               realname = java.net.URLEncoder.encode(realname, "UTF-8");
 
 	         
 
-	        response.setHeader("Content-Disposition", "attachment;filename=\""+fileName+"\";");
+	    /*    response.setHeader("Content-Disposition", "attachment;filename=\""+fileName+"\";");*/
+	        response.setHeader("Content-Disposition", "attachment;filename=\""+realname+"\";");
 
 	        response.setHeader("Content-Transfer-Encoding", "binary");
 

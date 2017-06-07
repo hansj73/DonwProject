@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -53,15 +54,17 @@ function sendData(){
                 <th>첨부파일</th>
                 <td>
 	              <c:if test="${!empty boardView.filename}">
-	        		첨부파일 : <a href="/board/file.do?filename=${boardView.filename}">${boardView.filename}</a>
+	        		첨부파일 : <a href="/board/file.do?filename=${boardView.filename}&realname=${boardView.realname}">${boardView.realname}</a>
 	        	</c:if>        
 			</td>
             </tr>
             <tr>
                 <td colspan="2">
+                 <sec:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_SUPERADMIN')">
                     <a href="/board/write.do"><input type="button" value="새글등록하기"  class="pull-right"/></a>&nbsp;&nbsp;&nbsp;
                     <a href="/board/edit/${boardView.seq}"><input type="button" value="수정하기"  class="pull-right"/></a>&nbsp;&nbsp;&nbsp;
                     <input type="button" value="삭제하기"   onClick="sendData()" class="pull-right"/>&nbsp;&nbsp;&nbsp;
+                     </sec:authorize>
                     <input type="button" value="리스트" onclick="javascript:location.href='/board/list.do'"  class="pull-right"/>
                 </td>
             </tr>

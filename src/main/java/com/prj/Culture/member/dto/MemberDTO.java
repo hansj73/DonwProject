@@ -13,6 +13,7 @@ public class MemberDTO {
 	  String hp   ="";               
 	  String email  ="";             
 	  String reg_date   ="";
+	  String role_auth="";
 	  
 	  public MemberDTO() {
 		// TODO Auto-generated constructor stub
@@ -96,6 +97,14 @@ public class MemberDTO {
 
 	public void setReg_date(String reg_date) {
 		this.reg_date = reg_date;
+	}
+
+	public String getRole_auth() {
+		return role_auth;
+	}
+
+	public void setRole_auth(String role_auth) {
+		this.role_auth = role_auth;
 	}
 	      
 

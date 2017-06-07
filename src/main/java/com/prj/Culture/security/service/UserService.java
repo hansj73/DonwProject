@@ -54,7 +54,7 @@ public class UserService implements UserDetailsService {
 			  user.setPassword(memberList.get(0).getPwd());
 			  user.setEmail(memberList.get(0).getEmail());
 			  Role role = new Role(); 
-			  role.setName("ROLE_USER"); 
+			  role.setName(memberList.get(0).getRole_auth()); 
 			  List<Role> roles = new ArrayList<Role>(); 
 			  roles.add(role); 
 			  user.setAuthorities(roles);

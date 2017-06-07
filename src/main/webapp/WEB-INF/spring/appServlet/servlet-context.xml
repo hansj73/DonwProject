@@ -39,6 +39,9 @@
 	<beans:bean class="org.springframework.web.servlet.view.BeanNameViewResolver"/>
 	
 	<beans:bean id="downloadView"  class="com.prj.Culture.board.util.DownloadView"/>
+	 
+	
+		
 	
 	<!-- 100000000 1G -->
 	 <beans:bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
@@ -49,13 +52,16 @@
 	
 
 	<!--  특정 url만 캐시사용안함 (만료 시킴) -->
-<!-- 	<interceptors>
+	<interceptors>
 	     <interceptor>
 	          <mapping path="/**"/>
 	          <beans:bean class="org.springframework.web.servlet.mvc.WebContentInterceptor">
 	               <beans:property name="cacheSeconds" value="0"/>
 	          </beans:bean>
 	     </interceptor>
-	</interceptors> -->
+	</interceptors>
+	
+
+	<!-- <beans:bean id="passwordEncoderMake" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/> -->
 	
 </beans:beans>

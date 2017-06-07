@@ -145,17 +145,13 @@ public class BoardController {
 	        e.printStackTrace();
 	    }
 	    return newName;
-	     //2. send it back to the client as <img> that calls get method
-	     //we are using getTimeInMillis to avoid server cached image 
-	 
-//	     return "<img src='http://localhost:8080/spring-mvc-file-upload/rest/cont/get/"+Calendar.getInstance().getTimeInMillis()+"' />";
+	
 	 
 	  }
 	 
 	@RequestMapping(value = "/board/write_ok", method = RequestMethod.POST)
 	public String submit(BoardDTO boardDto, Model model){
 		
-		//System.out.println("userInfo : " + boardDto.getContent());
 		 try{
 	            
 	            boardDao.insertBoard(boardDto);
@@ -192,15 +188,18 @@ public class BoardController {
 	
 	//파일 다운로드
     @RequestMapping("/board/file.do")
-    public ModelAndView download(@RequestParam("filename")String filename)throws Exception{
+    public ModelAndView download(@RequestParam("filename")String filename,@RequestParam("realname")String realname)throws Exception{
 
         File downloadFile = new File(FileUtil.UPLOAD_PATH + "/" + filename);
+        	 
         
-     /*   ModelAndView mv = new ModelAndView();
-        mv.addObject("filename",downloadFile );
-        mv.setView(downloadView);*/
+         ModelAndView mv = new ModelAndView();
+        mv.addObject("downloadFile",downloadFile );
+        mv.addObject("realname",realname );
+        mv.setView(downloadView);
         
-        return new ModelAndView(downloadView,"downloadFile",downloadFile);
+//        return new ModelAndView(downloadView,"downloadFile",downloadFile);
+        return mv;
         
     }
     

@@ -171,9 +171,9 @@ div.absolute {
         	  <div align="center">
 	            ${pagingHtml}
 	            </div>
-	             <%-- <sec:authorize access="hasRole('ROLE_ADMIN')"> --%>
+	             <sec:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_SUPERADMIN')">
 	              	<input type="button" value="글쓰기"  onclick="javascript:location.href='/board/write.do'"  class="pull-right"/>
-	            <%-- </sec:authorize> --%>
+	            </sec:authorize>
 	              	
 	  </div>
     	<!-- [end] pagging -->

@@ -17,6 +17,7 @@ public class BoardDTO {
 	    private MultipartFile upload;
 	    private String filename;
 	    private String oldFileName;
+	    private String realname;
 	    
 		public int getSeq() {
 			return seq;
@@ -77,5 +78,11 @@ public class BoardDTO {
 		}
 		public void setOldFileName(String oldFileName) {
 			this.oldFileName = oldFileName;
+		}
+		public String getRealname() {
+			return realname;
+		}
+		public void setRealname(String realname) {
+			this.realname = realname;
 		}
 }

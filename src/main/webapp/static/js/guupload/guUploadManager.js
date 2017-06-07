@@ -168,7 +168,8 @@ guUploadManager.prototype.formSubmit = function() {
 	var filesize = guTool.createTextBox("hidden", this.form, "filesize");
 
 	
-	realname.value = this.realname;
+	realname.value = this.filename;
+//	realname.value = this.realname;
 	//filename.value = this.filename;
 	filesize.value = this.filesize;
 	
