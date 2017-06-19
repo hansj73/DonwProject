@@ -62,6 +62,17 @@
 		<url-pattern>*.do</url-pattern>
 	</servlet-mapping>
 	
+	 <!-- error page setup -->
+	 <error-page>
+	  <error-code>404</error-code>
+	  <location>/html/code404.jsp</location>
+	 </error-page>
+	
+	 <error-page>
+	  <error-code>500</error-code>
+	  <location>/html/code500.jsp</location>
+	 </error-page>
+	
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
 		<welcome-file>index.htm</welcome-file>

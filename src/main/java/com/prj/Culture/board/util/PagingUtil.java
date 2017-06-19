@@ -54,43 +54,53 @@ public class PagingUtil {
         pagingHtml = new StringBuffer();
         if (currentPage > blockPage) {
             if(keyWord==null){//검색 미사용시
-                pagingHtml.append("<a href="+pageUrl+"?pageNum="+ (startPage - 1) + addKey +">");
+   /*             pagingHtml.append("<a href="+pageUrl+"?pageNum="+ (startPage - 1) + addKey +">");*/
+                pagingHtml.append("<a href='#' onclick=Paging('"+pageUrl+"','"+(startPage - 1) + addKey+"')>");
             }else{
-                pagingHtml.append("<a href="+pageUrl+"?keyField="+keyField+"&keyWord="+keyWord+"&pageNum="+ (startPage - 1) + addKey +">");
+            	pagingHtml.append("<a href='#' onclick=Paging('"+pageUrl+"','"+keyField+"','"+keyWord+"','"+(startPage - 1) + addKey+"')>");
+                /*pagingHtml.append("<a href='#' onclick=Paging("+pageUrl+"?keyField="+keyField+"&keyWord="+keyWord+"&pageNum="+ (startPage - 1) + addKey +">");*/
             }
             pagingHtml.append("이전");
             pagingHtml.append("</a>");
         }
-        pagingHtml.append(" | ");
+        //pagingHtml.append(" | ");
         //페이지 번호.현재 페이지는 빨간색으로 강조하고 링크를 제거.
         for (int i = startPage; i <= endPage; i++) {
             if (i > totalPage) {
                 break;
             }
             if (i == currentPage) {
-                pagingHtml.append(" <b> <font color='red'>");
+                /*pagingHtml.append(" <b> <font color='red'>");
                 pagingHtml.append(i);
-                pagingHtml.append("</font></b>");
+                pagingHtml.append("</font></b>");*/
+                pagingHtml.append(" <a href=\"#\" class=\"on\">");
+                pagingHtml.append(i);
+                pagingHtml.append("</a>");
             } else {
                 if(keyWord==null){//검색 미사용시
+                    /*pagingHtml.append(" <a href='"+pageUrl+"?pageNum=");*/
                     pagingHtml.append(" <a href='"+pageUrl+"?pageNum=");
                 }else{
-                    pagingHtml.append(" <a href='"+pageUrl+"?keyField="+keyField+"&keyWord="+keyWord+"&pageNum=");
+                	pagingHtml.append("<a href='#' onclick=Paging('"+pageUrl+"','"+keyField+"','"+keyWord+"','");
+                    /*pagingHtml.append(" <a href='"+pageUrl+"?keyField="+keyField+"&keyWord="+keyWord+"&pageNum=");*/
                 }
                 pagingHtml.append(i);
-                pagingHtml.append(addKey+"'>");
+                pagingHtml.append(addKey+"')>");
                 pagingHtml.append(i);
                 pagingHtml.append("</a>");
             }
             pagingHtml.append(" ");
         }
-        pagingHtml.append("  |  ");
+        //pagingHtml.append("  |  ");
         // 다음 block 페이지
         if (totalPage - startPage >= blockPage) {
             if(keyWord==null){//검색 미사용시
-                pagingHtml.append("<a href="+pageUrl+"?pageNum="+ (endPage + 1) + addKey +">");
+                /*pagingHtml.append("<a href="+pageUrl+"?pageNum="+ (endPage + 1) + addKey +">");*/
+                
+            	pagingHtml.append("<a href='#' onclick=Paging('"+pageUrl+"','"+(endPage - 1) + addKey+"')>");
             }else{
-                pagingHtml.append("<a href="+pageUrl+"?keyField="+keyField+"&keyWord="+keyWord+"&pageNum="+ (endPage + 1) + addKey +">");
+                /*pagingHtml.append("<a href="+pageUrl+"?keyField="+keyField+"&keyWord="+keyWord+"&pageNum="+ (endPage + 1) + addKey +">");*/
+            	pagingHtml.append("<a href='#' onclick=Paging('"+pageUrl+"','"+keyField+"','"+keyWord+"','"+(endPage + 1) + addKey+"')>");
             }
             pagingHtml.append("다음");
             pagingHtml.append("</a>");

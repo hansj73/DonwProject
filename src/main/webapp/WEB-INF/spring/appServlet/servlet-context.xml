@@ -5,14 +5,15 @@
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:security="http://www.springframework.org/schema/security"
 	xmlns:tx="http://www.springframework.org/schema/tx"
+	 xmlns:util="http://www.springframework.org/schema/util"
 	xsi:schemaLocation="http://cxf.apache.org/configuration/beans http://cxf.apache.org/schemas/configuration/cxf-beans.xsd
 		http://cxf.apache.org/configuration/security http://cxf.apache.org/schemas/configuration/security.xsd
 		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
 		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
-		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd"> 
-
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd"> 
 
 	
 	<context:component-scan base-package="com.prj.Culture" />
@@ -21,11 +22,13 @@
 	<security:global-method-security secured-annotations="enabled" />
 
 	 
+	 <!-- [config] -->
+	<util:properties id="config" location="classpath:/config.properties" />
+
+	 
 	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
 	<beans:bean class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping" />
 	<resources mapping="/resources/**" location="/resources/" />
-	<resources mapping="/bootstrap_css/**" location="/bootstrap/css/" />
-	<resources mapping="/bootstrap_vendor/**" location="/bootstrap/vendor/" />
 	<resources mapping="/images/**" location="/static/images/" />
 	<resources mapping="/css/**" location="/static/css/" />
 	<resources mapping="/js/**" location="/static/js/" />
@@ -62,6 +65,5 @@
 	</interceptors>
 	
 
-	<!-- <beans:bean id="passwordEncoderMake" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/> -->
 	
 </beans:beans>

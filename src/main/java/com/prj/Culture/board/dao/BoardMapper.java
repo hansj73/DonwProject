@@ -13,7 +13,7 @@ public interface BoardMapper {
 	
 	public void insertBoard(BoardDTO boardWrite); 
 	
-	public BoardDTO viewBoard(int seq);
+	public BoardDTO viewBoard(Map<String,Object> map);
 	
 	public void updateHit(int seq);
 	

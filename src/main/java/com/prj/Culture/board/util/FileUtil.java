@@ -1,16 +1,23 @@
 package com.prj.Culture.board.util;
 
 import java.io.File;
+import java.util.Properties;
+
+import javax.annotation.Resource;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
 
 public class FileUtil {
 
 	 //업로드 경로
 	
-    public static final String UPLOAD_PATH = "G:/downImage1";
-    
     /**
      * 파일 이름 변경, 변경할 이름을 메소드내에서 지정
      * */
+    //public static final String UPLOAD_PATH="";
+    
     public static String rename(String filename) throws Exception{
         
         if(filename ==null) return null;
@@ -47,7 +54,7 @@ public class FileUtil {
     /**
      * 파일 삭제
      * */
-    public static void removeFile(String filename){
+    public static void removeFile(String UPLOAD_PATH,String filename){
         File file = new File(UPLOAD_PATH,filename);
         if(file.exists()) file.delete();
         

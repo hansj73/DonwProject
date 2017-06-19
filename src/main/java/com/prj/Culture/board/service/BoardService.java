@@ -35,10 +35,10 @@ public class BoardService  {
 		
 		boardDao.insertBoard(boardWrite);
 	}
-	public BoardDTO viewBoard(int seq) {
+	public BoardDTO viewBoard(Map<String, Object> map) {
 		// TODO Auto-generated method stub
 		//boardMapper.viewBoard(seq);
-		return boardDao.viewBoard(seq);
+		return boardDao.viewBoard(map);
 	}
 	
 	public void updateHit(int seq) {

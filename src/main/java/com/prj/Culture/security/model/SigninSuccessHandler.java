@@ -28,19 +28,23 @@ public class SigninSuccessHandler extends SavedRequestAwareAuthenticationSuccess
 
          String accept = request.getHeader("accept");
                   
-         HttpSession session = request.getSession();
+       /*  HttpSession session = request.getSession();
          
          if (session != null) {
              String redirectUrl = (String) session.getAttribute("prevPage");
+             System.out.println("::::redirectUrl::1::"+redirectUrl);
              if (redirectUrl != null) {
                  session.removeAttribute("prevPage");
+                 System.out.println("::::redirectUrl::2::");
                  getRedirectStrategy().sendRedirect(request, response, redirectUrl);
              } else {
+            	 System.out.println("::::redirectUrl::3::");
                  super.onAuthenticationSuccess(request, response, auth);
              }
          } else {
+        	 System.out.println("::::redirectUrl::4::");
              super.onAuthenticationSuccess(request, response, auth);
-         }
+         }*/
          
         /* 
          if( StringUtils.indexOf(accept, "html") > -1 ) {
@@ -84,8 +88,9 @@ public class SigninSuccessHandler extends SavedRequestAwareAuthenticationSuccess
          }
          
 */        
+//         System.out.println("::::login_success:::");
          
-         /*super.onAuthenticationSuccess(request, response, auth);*/
+         super.onAuthenticationSuccess(request, response, auth);
          
          
     }

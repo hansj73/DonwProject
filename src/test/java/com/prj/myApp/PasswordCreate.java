@@ -1,56 +1,53 @@
 package com.prj.myApp;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.dao.SaltSource;
-import org.springframework.security.authentication.encoding.PasswordEncoder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.util.ArrayList;
 
-import com.prj.Culture.security.dto.UserDTO;
+import org.springframework.stereotype.Component;
 
+@Component
 public class PasswordCreate   {
 
-	@Autowired 
-	private static PasswordEncoder passwordEncoder; 
+
 	
-	@Autowired 
-	private static SaltSource saltSource;
-	
-	@Autowired(required = false)
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		   
-		
+		ArrayList<String> arr = new ArrayList<String>();
+		String data="";
+		String[] ddata;
 		  try 
 		  { 
-		      String password="test";  
-		      UserDTO user =null; 
+			 
 			  
-		        String hashedPassword = passwordEncoder.encodePassword(password, saltSource.getSalt(user)); 
-		        System.out.println(":::::hashedPassword::"+hashedPassword);
-		        System.out.println("::::");
-		        //logger.info("username : " + userId + " / password : " + password + " / hash password : " + hashedPassword); 
-		        //logger.info("username : " + user.getUsername() + " / password : " + user.getPassword()); 
-		        
-		  } 
-		  catch(UsernameNotFoundException e) 
-		  { 
-		        //throw new UsernameNotFoundException(e.getMessage());
-		        System.out.println("::::UsernameNotFoundException::"+e);
-		  } 
-		  catch(BadCredentialsException e) 
-		  { 
-//		        throw new BadCredentialsException(e.getMessage()); 
-		        System.out.println("::::BadCredentialsException::"+e);
+			  BufferedReader in = new BufferedReader(new FileReader("G:/study/workspace/DownProject/src/test/java/com/prj/myApp/a.txt"));
+		      String s="";
+
+		      while ((s = in.readLine()) != null) {
+		    	  //System.out.println(s);
+		    	  arr.add(s+"\n");
+		      }
+		      
+		    System.out.println(arr.get(3));
+		    data=arr.get(3);
+		    data=data.replaceAll("/dev/sdb1", "");
+		    data=data.replaceAll("/data", "");
+		    data=data.replaceAll("\\p{Z}", "");
+		    System.out.println(data);
+		    ddata=data.split("G");
+		    
+		    System.out.println("::총디스크용량::"+ddata[0]+":::사용중인용량::"+ddata[1]+":::남은용량:::"+ddata[2]+"::사용%::"+ddata[3]);
+		    
+
 		  } 
 		  catch(Exception e) 
 		  { 
-			  System.out.println("::::Exception::"+e);
+		        //throw new UsernameNotFoundException(e.getMessage());
+			  System.out.println(e);
+		      
 		  } 
-
-	}
+		  	}
 
 }

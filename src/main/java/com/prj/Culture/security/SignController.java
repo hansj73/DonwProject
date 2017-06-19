@@ -54,17 +54,17 @@ public class SignController {
 		 
 	    model.addAttribute("error", error);
 
-		return "signin";
+		return "login";
 	}
-	
+/*	
 	@RequestMapping(value = "/signinFail", method = RequestMethod.GET)
 	public String singinfail(@RequestParam(value="error", required=false) String error, Model model){
 
 	   System.out.println(":::;loginFail::");
 		return "denied";
-	}
+	}*/
 	
-	@PreAuthorize("authenticated")
+	/*@PreAuthorize("authenticated")
 	@RequestMapping(value="/mypage",method=RequestMethod.GET)
 	public String myPage(Model model) {
 		
@@ -72,13 +72,13 @@ public class SignController {
 		
 		model.addAttribute("user_name",auth.getName());
 		return "mypage";
-	}
+	}*/
 	
-	@RequestMapping(value="/denied",method=RequestMethod.GET)
+	/*@RequestMapping(value="/denied",method=RequestMethod.GET)
 	public String denied() {
 		return "denied";
 		
-	}
+	}*/
 	
 	/*@RequestMapping(value="/authlist",method=RequestMethod.GET)
 	public String authBoard() {

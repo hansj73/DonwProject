@@ -19,6 +19,13 @@ public class BoardDTO {
 	    private String oldFileName;
 	    private String realname;
 	    
+	    /** 이전글 / 다음글 ***/
+	    private int next_seq;
+	    private String next_title;
+	    private int pre_seq;
+	    private String pre_title;
+	    
+	    
 		public int getSeq() {
 			return seq;
 		}
@@ -84,5 +91,29 @@ public class BoardDTO {
 		}
 		public void setRealname(String realname) {
 			this.realname = realname;
+		}
+		public int getNext_seq() {
+			return next_seq;
+		}
+		public void setNext_seq(int next_seq) {
+			this.next_seq = next_seq;
+		}
+		public String getNext_title() {
+			return next_title;
+		}
+		public void setNext_title(String next_title) {
+			this.next_title = next_title;
+		}
+		public int getPre_seq() {
+			return pre_seq;
+		}
+		public void setPre_seq(int pre_seq) {
+			this.pre_seq = pre_seq;
+		}
+		public String getPre_title() {
+			return pre_title;
+		}
+		public void setPre_title(String pre_title) {
+			this.pre_title = pre_title;
 		}
 }

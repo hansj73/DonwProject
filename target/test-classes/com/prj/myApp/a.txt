@@ -1,0 +1,4 @@
+Filesystem            Size  Used Avail Use% Mounted on
+/dev/mapper/VolGroup00-LogVol00   45G   21G   22G  49% /
+/dev/sda1              99M   20M   74M  21% /boot
+/dev/sdb1              99G   57G   38G  61% /data

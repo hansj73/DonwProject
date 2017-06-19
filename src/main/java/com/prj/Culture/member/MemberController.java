@@ -1,6 +1,12 @@
 package com.prj.Culture.member;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
@@ -40,24 +46,49 @@ public class MemberController {
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 */
-	@RequestMapping(value = "/member", method = RequestMethod.GET)
-	public String home(Locale locale, Model model) {
-		logger.info("Welcome home! The client locale is {}.", locale);
 		
-		Date date = new Date();
-		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
-		
-		String formattedDate = dateFormat.format(date);
-		
-		model.addAttribute("serverTime", formattedDate );
-		
-		return "home";
-	}
-	
-	@RequestMapping(value = "/member/passwd", method = RequestMethod.GET)
+	@RequestMapping(value = "/member/mypage", method = RequestMethod.GET)
 	public String passwd(Locale locale, Model model) {
 		
-		return "/member/passwd";
+		ArrayList<String> arr = new ArrayList<String>();
+		String data="";
+		String[] ddata;
+		  try 
+		  { 
+			 
+		  
+		     Runtime rt1 = Runtime.getRuntime(); 
+			 Process proc1 = rt1.exec("df -hlP --type=ext3 "); //전체용량 GB
+			 InputStream is1 = proc1.getInputStream(); 
+	         InputStreamReader isr1 = new InputStreamReader(is1); 
+	         BufferedReader br1 = new BufferedReader(isr1);
+	            String line1;
+	            while((line1=br1.readLine())!= null){
+	            	 arr.add(line1+"\n");
+	            }
+	            data=arr.get(3);
+			    data=data.replaceAll("/dev/sdb1", "");
+			    data=data.replaceAll("/data", "");
+			    data=data.replaceAll("\\p{Z}", "");
+			 //   System.out.println(data);
+			    ddata=data.split("G");
+		    
+		   // System.out.println("::총디스크용량::"+ddata[0]+":::사용중인용량::"+ddata[1]+":::남은용량:::"+ddata[2]+"::사용%::"+ddata[3].replaceAll("%",""));
+		    
+
+		    model.addAttribute("totalSpace", ddata[0]);
+	    	model.addAttribute("usedSpace", ddata[1]);
+	    	model.addAttribute("usedPer",ddata[3]);
+		  } 
+		  catch(Exception e) 
+		  { 
+		        //throw new UsernameNotFoundException(e.getMessage());
+			  System.out.println(e);
+		      
+		  } 
+      
+
+		return "/member/mypage";
 	}
 	
 	@RequestMapping(value = "/member/passwd_ok", method = RequestMethod.POST)
@@ -90,7 +121,45 @@ public class MemberController {
         
 		model.addAttribute("passwd", hashedPassword );
 		
+		return "/member/mypage";
+	}
+	
+	
+	@RequestMapping(value = "/member/passwd", method = RequestMethod.GET)
+	public String passwd1(Locale locale, Model model) {
+		
+		ArrayList<String> arr = new ArrayList<String>();
+		String data="";
+		String[] ddata;
+		try 
+		  { 
+			  
+		 //System.out.println("::::disk call::::");
+
+		 Runtime rt1 = Runtime.getRuntime(); 
+		 Process proc1 = rt1.exec("df -hlP --type=ext3 "); //전체용량 GB
+		 InputStream is1 = proc1.getInputStream(); 
+         InputStreamReader isr1 = new InputStreamReader(is1); 
+         BufferedReader br1 = new BufferedReader(isr1);
+            String line1;
+            while((line1=br1.readLine())!= null){
+            	 arr.add(line1+"\n");
+            }
+            data=arr.get(3);
+		    data=data.replaceAll("/dev/sdb1", "");
+		    data=data.replaceAll("/data", "");
+		    data=data.replaceAll("\\p{Z}", "");
+		    //System.out.println(data);
+		    ddata=data.split("G");
+		    
+		    System.out.println("::총디스크용량::"+ddata[0]+":::사용중인용량::"+ddata[1]+":::남은용량:::"+ddata[2]+"::사용%::"+ddata[3]);   
+	            
+		  }catch(Exception e){
+		  }
+		
+
 		return "/member/passwd";
 	}
+
 	
 }

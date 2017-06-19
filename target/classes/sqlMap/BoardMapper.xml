@@ -32,7 +32,7 @@
             FROM (
                 SELECT
                     *
-                FROM boardtest
+                FROM down_board
         <where>
             <if test ="keyWord != '' and keyField =='title'">
                 title like '%' ||#{keyWord}||'%'
@@ -45,8 +45,7 @@
             </if>
             <if test ="keyWord != '' and keyField =='all'">
                 content like '%' ||#{keyWord}||'%' or
-                title like '%' ||#{keyWord}||'%' or
-                writer like '%' ||#{keyWord}||'%'
+                title like '%' ||#{keyWord}||'%'
             </if>
         </where>
                 ORDER BY seq desc)a)
@@ -58,7 +57,7 @@
 	<select id="getRowCount" parameterType="map" resultType="Integer">
         SELECT
             count(*)
-        FROM boardtest
+        FROM down_board
         <where>
             <if test ="keyWord != '' and keyField =='title'">
                 title like '%' ||#{keyWord}||'%'
@@ -71,14 +70,13 @@
             </if>
             <if test ="keyWord != '' and keyField =='all'">
                 content like '%' ||#{keyWord}||'%' or
-                title like '%' ||#{keyWord}||'%' or
-                writer like '%' ||#{keyWord}||'%'
+                title like '%' ||#{keyWord}||'%' 
             </if>
         </where>
     </select>
 	
 	<insert id="insertBoard">
-        INSERT INTO boardtest(
+        INSERT INTO down_board(
             seq,
             writer,
             title,
@@ -89,7 +87,7 @@
             filename,
             realname)
         VALUES (
-            boardtest_seq.nextval,
+            down_board_seq.nextval,
             #{writer},
             #{title},
             #{content},
@@ -101,44 +99,64 @@
         )
     </insert>
     
-    <select id="viewBoard" parameterType="Integer" resultMap="BoardResultMap">
+    <select id="viewBoard" parameterType="map" resultMap="BoardResultMap">
+        SELECT * FROM(
         SELECT
             seq,
-            writer
+            writer,
             title,
             content,
             pwd,
             hit,
             regdate,
             filename,
-            realname
-        FROM boardtest
+            realname,
+            lead(title,1) over(order by seq) next_title,
+		    lead(seq,1) over(order by seq) next_seq,
+		    lag(title,1) over(order by seq) pre_title,
+		    lag(seq,1) over(order by seq) pre_seq
+        FROM down_board
+        <where>
+            <if test ="keyWord != '' and keyField =='title'">
+                title like '%' ||#{keyWord}||'%'
+            </if>
+            <if test ="keyWord != '' and keyField =='writer'">
+                writer like '%' ||#{keyWord}||'%'
+            </if>
+            <if test ="keyWord != '' and keyField =='content'">
+                content like '%' ||#{keyWord}||'%'
+            </if>
+            <if test ="keyWord != '' and keyField =='all'">
+                content like '%' ||#{keyWord}||'%' or
+                title like '%' ||#{keyWord}||'%' 
+            </if>
+        </where>
+        )
         WHERE seq = #{seq}
     </select>
     
     <update id="updateHit" parameterType="Integer">
-        UPDATE boardtest
+        UPDATE down_board
         SET
           hit = hit+1
         WHERE seq =#{seq}      
     </update>
     
     <update id="editBoard">
-        UPDATE boardtest
+        UPDATE down_board
         SET
          title=#{title},
          content=#{content},
-         filename=#{filename,jdbcType=VARCHAR}
+         filename=#{filename,jdbcType=VARCHAR},
+         realname=#{realname,jdbcType=VARCHAR}
         WHERE seq =#{seq} 
     </update>
     
     <delete id="deleteBoard">
         DELETE
-        FROM boardtest
+        FROM down_board
         WHERE seq =#{seq}
     </delete>
     
-        
-	
-
+    
 </mapper>

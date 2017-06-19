@@ -114,7 +114,7 @@ var guUploadManager = function(option) {
 //		alert(btnLoc);
 		var browseBtn = guTool.createTextBox("button", btnLoc, "browseBtn", true);
 //		var browseBtn = guTool.createTextBox("button", guupload, "browseBtn", true);
-		browseBtn.setAttribute("value", "파일 찾기");
+		browseBtn.setAttribute("value", "업로드 파일  찾기");
 		addEvent("click", browseBtn, function(){filetag.click();});
 
 		var settings = {

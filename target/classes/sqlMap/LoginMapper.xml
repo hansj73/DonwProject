@@ -14,11 +14,11 @@
 	</resultMap>
 	
 	<select id="getMembers" resultMap="MemberResultMap" >
-		SELECT * FROM TEST_MEMBER where user_id=#{user_id} and pwd=#{pwd}
+		SELECT * FROM DOWN_MEMBER where user_id=#{user_id} and pwd=#{pwd}
 	</select>
 	
 	<select id="getMembersInfo" resultMap="MemberResultMap" >
-		SELECT * FROM TEST_MEMBER where user_id=#{user_id}
+		SELECT * FROM DOWN_MEMBER where user_id=#{user_id}
 	</select>
 
 </mapper>

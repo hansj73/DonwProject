@@ -2,19 +2,27 @@ package com.prj.Culture.board;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -32,20 +40,37 @@ import com.prj.Culture.board.util.FileUtil;
 import com.prj.Culture.board.util.PagingUtil;
 import com.prj.Culture.board.util.StringUtil;
 
+import java.util.Properties;
 /**
  * Handles requests for the application home page.
  */
 @Controller
+@RequestMapping(value="/board")
 public class BoardController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(BoardController.class);
+	
+
+	
+	/*@Resource(name="config")
+    private  Properties config;
+  
+    public  String getFromConfig(String key) {
+        return config.getProperty(key);
+    }*/
+    
+    @Value("#{config['UploadDir']}")
+    private String UPLOAD_PATH;
+
+    
+   /* public  String UPLOAD_PATH = getFromConfig("UploadDir");*/
 	
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 */
 	
 	  private int pageSize = 10;
-	  private int blockCount = 10;
+	  private int blockCount = 5;
 	
 	@Autowired
 	private BoardService boardDao;
@@ -56,10 +81,10 @@ public class BoardController {
 	
 	UploadedFile ufile = new UploadedFile();
 	
-	@RequestMapping(value = "/board/list")
+	@RequestMapping(value = "/list")
 	public ModelAndView  list(@RequestParam(value="pageNum",defaultValue="1")int currentPage,
 							  @RequestParam(value="keyField",defaultValue="")String keyField,
-							  @RequestParam(value="keyWord",defaultValue="")String keyWord){
+							  @RequestParam(value="keyWord",defaultValue="")String keyWord) throws UnsupportedEncodingException{
 	
 		logger.info("[start]---list----");
 		
@@ -72,7 +97,7 @@ public class BoardController {
 	        }
 	
 		  HashMap<String, Object> map = new HashMap<String, Object>();
-	        map.put("keyField", keyField);
+	        map.put("keyField",  keyField);
 	        map.put("keyWord", keyWord);
 		
 	    int count= boardDao.getRowCount(map);
@@ -102,16 +127,37 @@ public class BoardController {
         mv.addObject("pagingHtml", pagingHtml);
         mv.addObject("number", number);
         
+        mv.addObject("keyWord", keyWord);
+        mv.addObject("keyField", keyField);
+        
 		return mv;
 	}
 
 	
-	@RequestMapping(value = "/board/write", method = RequestMethod.GET)
-	public String write_form() {
-		return "/board/write";
+	@RequestMapping(value = "/write")
+	public String write_form(HttpServletRequest request, HttpServletResponse response,
+			 @RequestParam(value="title",required=false) String title,
+			 @RequestParam(value="content",required=false) String content,
+			Model model) {
+		
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	      Calendar c1 = Calendar.getInstance();
+		  String strToday = sdf.format(c1.getTime());
+		  
+		  
+		  content=StringUtil.NulltoString(content);
+		  title=StringUtil.NulltoString(title);
+		  
+		  //content=(!"".equals(content))?StringUtil.parseBr(content):content;
+		  
+		  model.addAttribute("strToday", strToday );
+		  model.addAttribute("title",title);
+		  model.addAttribute("content",content);
+		  return "/board/write";
 	}
 	
-	 @RequestMapping(value = "/board/fileUpload", method = RequestMethod.POST)
+	 @RequestMapping(value = "/fileUpload", method = RequestMethod.POST)
 	   public @ResponseBody String upload(MultipartHttpServletRequest request, HttpServletResponse response) throws Exception {                 
 	 
 	     //0. notice, we have used MultipartHttpServletRequest
@@ -136,8 +182,9 @@ public class BoardController {
 	        System.out.println(":::ufile.type::"+ufile.type);
 	        System.out.println(":::ufile.name::"+ufile.name);
 	        System.out.println(":::newName::"+newName);*/
-	        File file = new File(FileUtil.UPLOAD_PATH+"/"+newName);
-	        System.out.println(":::file::"+file);
+//	        File file = new File(FileUtil.UPLOAD_PATH+"/"+newName);
+	        File file = new File(UPLOAD_PATH+"/"+newName);
+	       
 	        mpf.transferTo(file);
 	     
 	    } catch (IOException e) {
@@ -149,51 +196,65 @@ public class BoardController {
 	 
 	  }
 	 
-	@RequestMapping(value = "/board/write_ok", method = RequestMethod.POST)
+	@RequestMapping(value = "/write_ok", method = RequestMethod.POST)
 	public String submit(BoardDTO boardDto, Model model){
 		
 		 try{
-	            
 	            boardDao.insertBoard(boardDto);
-	        
 	        }catch(Exception e){
-	            e.printStackTrace();
+	         	e.printStackTrace();
 	        }
 		 return "redirect:/board/list.do";
 	}
 	
-	@RequestMapping(value = "/board/view/{seq}")
-	/*public ModelAndView view(@RequestParam("seq")int seq) {*/
-		public ModelAndView view(@PathVariable int seq) {
+	@RequestMapping(value = "/view")
+	public ModelAndView view(HttpServletRequest request, HttpServletResponse response) {
+		/*public ModelAndView view(@PathVariable int seq) {*/
+		
+		int seq = Integer.parseInt(request.getParameter("seq"));
+		String keyField = request.getParameter("keyField");
+		String keyWord = request.getParameter("keyWord");
+		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		   map.put("seq", seq);
+		   map.put("keyField", keyField);
+	       map.put("keyWord", keyWord);
 		
 		if(logger.isDebugEnabled()){
 			logger.debug("seq : " + seq);
         }
+		
+		/*System.out.println("seq : " + seq);
+		System.out.println("keyField : " + keyField);
+		System.out.println("keyWord" + seq);*/
 		
 		logger.info("seq : " + seq);
 		
 		boardDao.updateHit(seq);
 		logger.info("updateHit : " + seq);
 
-		BoardDTO viewDto = boardDao.viewBoard(seq);
+		BoardDTO viewDto = boardDao.viewBoard(map);
  
         viewDto.setContent(StringUtil.parseBr(viewDto.getContent()));
 		
 		ModelAndView mv = new ModelAndView();
 		mv.setViewName("/board/view");
 		mv.addObject("boardView",viewDto);
+		mv.addObject("keyField",keyField);
+		mv.addObject("keyWord",keyWord);
 		
 		return mv;
 	}
 	
 	//파일 다운로드
-    @RequestMapping("/board/file.do")
+    @RequestMapping("/file.do")
     public ModelAndView download(@RequestParam("filename")String filename,@RequestParam("realname")String realname)throws Exception{
 
-        File downloadFile = new File(FileUtil.UPLOAD_PATH + "/" + filename);
+        /*File downloadFile = new File(FileUtil.UPLOAD_PATH + "/" + filename);*/
+        File downloadFile = new File(UPLOAD_PATH + "/" + filename);
         	 
         
-         ModelAndView mv = new ModelAndView();
+        ModelAndView mv = new ModelAndView();
         mv.addObject("downloadFile",downloadFile );
         mv.addObject("realname",realname );
         mv.setView(downloadView);
@@ -204,34 +265,69 @@ public class BoardController {
     }
     
     
-    @RequestMapping(value = "/board/delete", method = RequestMethod.POST)
-    public String delete(BoardDTO boardDto, Model model) {
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    public String delete(HttpServletRequest request, Model model) {
     	
-    	int seq = boardDto.getSeq();
-    	
+    	 int seq = Integer.parseInt(request.getParameter("seq"));
+    	 String delFileName = StringUtil.NulltoString(request.getParameter("delFileName"));
     	/** 업로드 파일 있을시에 파일 삭제 ***/
+  
     	
-    	if(boardDto.getFilename()!=null){
-    		FileUtil.removeFile(boardDto.getFilename());
+    	if(!"".equals(delFileName)){
+    		FileUtil.removeFile(UPLOAD_PATH,delFileName);
     	}
     	
     	boardDao.deleteBoard(seq);
-    	
+   
         return "redirect:/board/list.do";
     }
     
-    @RequestMapping(value = "/board/edit/{seq}")
+    @RequestMapping(value = "/multiDel", method = RequestMethod.POST)
+    public @ResponseBody String listdel(HttpServletRequest request,
+    	      HttpServletResponse response,
+    	      @RequestParam(value="seq",required=false) List<String> delChk,
+    	      @RequestParam(value="delFileName",required=false) List<String> delFileName, Model model) {
+    	
+    	int i = 0;
+        for( String value : delChk ){
+          System.out.println( ">>> name's value : " + value + "delFileName : " + delFileName.get(i) );
+          
+          if(!"".equals(delFileName.get(i))){
+        	  FileUtil.removeFile(UPLOAD_PATH,delFileName.get(i));
+          }
+          boardDao.deleteBoard(Integer.parseInt(value));
+          
+          i++;
+        }
+    	
+  
+    	
+    	/*if(!"".equals(delFileName)){
+    		FileUtil.removeFile(delFileName);
+    	}
+    	
+    	boardDao.deleteBoard(seq);
+   */
+        //return "redirect:/board/list.do";
+        return "success";
+    }
+    
+    @RequestMapping(value = "/edit/{seq}")
     public ModelAndView edit(@PathVariable int seq){
-       BoardDTO boardDto = boardDao.viewBoard(seq);
+    	HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("seq", seq);
+       BoardDTO boardDto = boardDao.viewBoard(map);
         return new ModelAndView("/board/edit","boardView",boardDto);
     }
     
-    @RequestMapping(value = "/board/edit_ok", method = RequestMethod.POST)
-	public String editOk(BoardDTO boardDto, Model model){
+    @RequestMapping(value = "/edit_ok", method = RequestMethod.POST)
+	public String editOk(BoardDTO boardDto,HttpServletRequest request,
+  	      HttpServletResponse response, Model model){
 		
     	logger.info("::[start]:edit_ok::");
     	
     	 String oldFileName = boardDto.getOldFileName();
+    	 String oldRealFileName = StringUtil.NulltoString(request.getParameter("oldRealFileName"));
     	 
 		/* try{
 	            String newName = "";
@@ -251,15 +347,16 @@ public class BoardController {
 	            e.printStackTrace();
 	        }*/
 		 
-    	 System.out.println("::::::boardDto.getFilename():::::"+boardDto.getFilename());
+    	/* System.out.println("::::::boardDto.getFilename():::::"+boardDto.getFilename());*/
 		 
 		 if(!"".equals(boardDto.getFilename())){
 			 if(oldFileName != null){
                  //이전파일 삭제 
-                 FileUtil.removeFile(oldFileName);
+                 FileUtil.removeFile(UPLOAD_PATH,oldFileName);
              }
          }else{
         	 boardDto.setFilename(oldFileName);//파일명
+        	 boardDto.setRealname(oldRealFileName);//파일명
          }
 		
 		 boardDao.editBoard(boardDto);

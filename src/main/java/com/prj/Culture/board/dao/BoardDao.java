@@ -42,11 +42,11 @@ public class BoardDao implements BoardMapper {
 	}
 
 	@Override
-	public BoardDTO viewBoard(int seq) {
+	public BoardDTO viewBoard(Map<String, Object> map) {
 		// TODO Auto-generated method stub
 		BoardMapper boardMapper = sqlSession.getMapper(BoardMapper.class);
 		//boardMapper.viewBoard(seq);
-		return boardMapper.viewBoard(seq);
+		return boardMapper.viewBoard(map);
 	}
 
 	@Override
