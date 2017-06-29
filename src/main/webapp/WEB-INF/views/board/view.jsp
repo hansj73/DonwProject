@@ -88,11 +88,28 @@
 						<tbody>
 							<tr>
 								<th scope="row">이전글</th>
-								<td><a href="#" id="preGo">${boardView.pre_title}</a></td>
+								<td>
+								<c:choose>
+									<c:when test="${!empty boardView.pre_title}">
+									<a href="#" id="preGo">${boardView.pre_title}</a>
+									</c:when>
+									<c:otherwise>
+										이전 게시글이 없습니다.
+									</c:otherwise>
+								</c:choose>
 							</tr>
 							<tr>
 								<th scope="row">다음글</th>
-								<td><a href="#" id="nextGo">${boardView.next_title}</a></td>
+								<td>
+								<c:choose>
+									<c:when test="${!empty boardView.next_title}">
+									<a href="#" id="nextGo">${boardView.next_title}</a>
+									</c:when>
+									<c:otherwise>
+										다음 게시글이 없습니다.
+									</c:otherwise>
+								</c:choose>
+								</td>
 							</tr>
 						</tbody>
 					</table>
